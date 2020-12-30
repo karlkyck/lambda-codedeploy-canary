@@ -25,7 +25,7 @@ Resources:
         		{
         			statusCode: 200,
         			body: JSON.stringify({
-        				message: 'Hello World A1'
+        				message: 'Hello World A'
         			})
         		});
         };
@@ -96,7 +96,7 @@ Resources:
         		{
         			statusCode: 200,
         			body: JSON.stringify({
-        				message: 'Hello World B1'
+        				message: 'Hello World B'
         			})
         		});
         };
@@ -213,11 +213,14 @@ Resources:
             - Effect: Allow
               Action:
                 - lambda:InvokeFunction
-              Resource: !GetAtt ExampleAFunction.Arn
+              Resource:
+                - !GetAtt ExampleAFunction.Arn
+                - !GetAtt ExampleBFunction.Arn
       FunctionName: CodeDeployHook_preTrafficHook
       Environment:
         Variables:
-          CurrentVersion: !Ref ExampleAFunction.Version
+          ExampleAFunctionCurrentVersion: !Ref ExampleAFunction.Version
+          ExampleBFunctionCurrentVersion: !Ref ExampleBFunction.Version
 
   PostTrafficLambdaFunction:
     Type: AWS::Serverless::Function
@@ -276,8 +279,11 @@ Resources:
             - Effect: Allow
               Action:
                 - lambda:InvokeFunction
-              Resource: !GetAtt ExampleAFunction.Arn
+              Resource:
+                - !GetAtt ExampleAFunction.Arn
+                - !GetAtt ExampleBFunction.Arn
       FunctionName: CodeDeployHook_postTrafficHook
       Environment:
         Variables:
-          CurrentVersion: !Ref ExampleAFunction.Version
+          ExampleAFunctionCurrentVersion: !Ref ExampleAFunction.Version
+          ExampleBFunctionCurrentVersion: !Ref ExampleBFunction.Version
